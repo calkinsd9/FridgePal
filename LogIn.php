@@ -14,6 +14,23 @@ function connect()
     return $connection;
 }
 
+function initializePDO()
+{
+    $host = 'cis.gvsu.edu';
+    $db = 'calkinda';
+    $user = 'calkinda';
+    $pass = 'calkinda';
+    $charset = 'utf8';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $opt = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+    return (new PDO($dsn, $user, $pass, $opt));
+}
+
 session_start();
 
 //redirect logged in users to their Inventory
@@ -24,13 +41,13 @@ if (isset($_SESSION['username'])){
 if (isset($_POST['username'])){
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $c = connect();
-    $sql = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ? AND password = ?;');
-    if ($sql->execute([$username, $password])) {
-        $result = $sql->fetchAll(\PDO::FETCH_ASSOC);
-    }
-    var_dump($result);
 
+
+    $pdo = initializePDO();
+    $statement = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ? AND password = ?;');
+    $statement->execute([$username, $password]);
+    $result = $statement->fetch();
+    var_dump($result);
 }
 
 ?>
