@@ -45,7 +45,7 @@ if (isset($_POST['username'])){
     //incorrect login makes $result === false
     //correct login makes $result['username'] === user's login name
     if ($result){
-        $_SESSION['username'] = $result;
+        $_SESSION['username'] = $result['username'];
         header("Location: Inventory.php");
     }
     else {

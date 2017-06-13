@@ -31,7 +31,7 @@ function getItems($location) {
     $pdo = initializePDO();
     $statement = $pdo->prepare('SELECT id, name, type, spoilDate FROM foodMainStorage WHERE createdBy = ? AND location = ?;');
     $statement->execute([$username, $location]);
-    $result = $statement->fetch();
+    $result = $statement->fetchAll();
 
     return $result;
 }
@@ -74,7 +74,7 @@ html;
             }
         }
         echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem()\">Edit</button> </td>";
-        echo "<td>Delete?<input type='checkbox' name='delete' value='$foodID'></td>";
+        echo "<td><button class='deleteButton' id='btnDelete$foodID' onclick=\"deleteItem()\">Delete</button></td>";
         echo "</tr>\n";
 
         //hidden form for editing
