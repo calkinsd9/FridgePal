@@ -38,6 +38,16 @@ if (isset($_SESSION['username'])){
     header("Location: Inventory.php");
 }
 
+?>
+
+<html>
+<head>
+    <title>Log In</title>
+</head>
+<body>
+<h1>Log In</h1>
+
+<?php
 if (isset($_POST['username'])){
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -47,22 +57,21 @@ if (isset($_POST['username'])){
     $statement = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ? AND password = ?;');
     $statement->execute([$username, $password]);
     $result = $statement->fetch();
-    //if the username password is wrong, $result will be a bool(false). if not, it will be an array with key 'username' that has value of the actual username
-
+    //incorrect login makes $result === false
+    //correct login makes $result['username'] === user's login name
     if ($result){
-        echo "Your username is " . $result['username'];
+        $_SESSION['username'] = $result;
+        header("Location: Inventory.php");
     }
-    
+    else {
+        echo "<P>That username and password are incorrect; please try again</p>";
+    }
+
 }
 
 ?>
 
-<html>
-<head>
-    <title>Log In</title>
-</head>
-<body>
-<h1>Log In</h1>
+
 <form action="LogIn.php" method="post">
     <label for="username">Username</label>
     <input type="text" name="username" id="username" value="" /> <br />
