@@ -8,11 +8,115 @@ if (!isset($_SESSION['username'])){
 
 ?>
 
+<?php
+function initializePDO()
+{
+    $host = 'cis.gvsu.edu';
+    $db = 'calkinda';
+    $user = 'calkinda';
+    $pass = 'calkinda';
+    $charset = 'utf8';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $opt = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+    return (new PDO($dsn, $user, $pass, $opt));
+}
+
+function getItems($location) {
+    $username = $_SESSION['username'];
+    $pdo = initializePDO();
+    $statement = $pdo->prepare('SELECT id, name, type, spoilDate FROM foodMainStorage WHERE createdBy = ? AND location = ?;');
+    $statement->execute([$username, $location]);
+    $result = $statement->fetch();
+
+    return $result;
+}
+
+function printTable($location){
+    $location_lowercase = strtolower($location);
+    echo <<<html
+    <h2>$location:</h2>
+    <table>
+        <tr>
+            <th>Ingredient</th>
+            <th>Food</th>
+            <th>Type</th>
+            <th>Spoils in</th>
+            <th></th>
+        </tr>
+html;
+
+    $result = getItems($location_lowercase);
+    $rowNum = 0;
+
+    foreach ($result as $row) {
+        //initially visible row
+        $foodID = $row['id'];
+        echo "<tr id=\"$foodID\">";
+        $name = $row['name'];
+        echo "<td><input class='checkboxes' type=\"checkbox\" name=\"\" value=\"$name\"></td>";
+        $keys = array("name", "type", "spoilDate");
+        // iterate over all the columns.  Each column is a <td> element.
+        foreach ($keys as $key) {
+            if ($key === "spoilDate"){
+                $today = new DateTime("now");
+                $spoilDate = date_create($row[$key]);
+                $interval = date_diff($today, $spoilDate);
+                $interval = intval($interval->format('%r%a'));
+                echo "<td class='$key'>$interval</td>";
+            }
+            else {
+                echo "<td class='$key'>" . $row[$key] . "</td>";
+            }
+        }
+        echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem()\">Edit</button> </td>";
+        echo "<td>Delete?<input type='checkbox' name='delete' value='$foodID'></td>";
+        echo "</tr>\n";
+
+        //hidden form for editing
+        echo "<tr id='edit$foodID' style='display: none'>";
+        echo "<td></td>";
+        foreach ($keys as $key) {
+            if ($key === "spoilDate"){
+                echo "<td><input type='text' name='spoilDays' value='$interval'>";
+            }
+            else {
+                echo "<td><input type='text' name='$key' value='$row[$key]'></td>";
+            }
+        }
+        echo "<td><button class='doneButton' id='btnDone$foodID' onclick=\"saveEdit()\">Done</button></td>";
+        $rowNum += 1;
+    }
+    echo "</table><br />";
+}
+
+?>
+
 <html>
 <head>
-    <title></title>
+    <title>Your Inventory</title>
 </head>
 <body>
+<h1>Current Inventory:</h1>
+<br/>
 
+<?php
+printTable("Fridge");
+printTable("Freezer");
+printTable("Pantry");
+?>
+
+<button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
+<script type="text/javascript" src="displayJS.js"></script>
+<br />
+<br />
+<br />
+<p>You are currently logged in as <?php echo $_SESSION['username']?>.</p>
+<a href="./AddItems.php" >Add Items</a>
+<a href="./Login.php?logout=true" >Click here to log out</a>
 </body>
 </html>
