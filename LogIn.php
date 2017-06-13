@@ -47,7 +47,12 @@ if (isset($_POST['username'])){
     $statement = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ? AND password = ?;');
     $statement->execute([$username, $password]);
     $result = $statement->fetch();
-    var_dump($result);
+    //if the username password is wrong, $result will be a bool(false). if not, it will be an array with key 'username' that has value of the actual username
+
+    if ($result){
+        echo "Your username is " . $result['username'];
+    }
+    
 }
 
 ?>
