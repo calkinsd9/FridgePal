@@ -10,10 +10,10 @@ if (isset($_SESSION['username'])){
 
 <html>
 <head>
-    <title>Sign Up</title>
+    <title>Log In</title>
 </head>
 <body>
-<h1>Sign Up</h1>
+<h1>Log In</h1>
 <form action="SignUp.php" method="post">
     <label for="username">Username</label>
     <input type="text" name="username" id="username" value="" /> <br />
@@ -23,6 +23,5 @@ if (isset($_SESSION['username'])){
     <br>
     <input type="submit" name="submitButton" value="Submit" />
 </form>
-
 </body>
 </html>
