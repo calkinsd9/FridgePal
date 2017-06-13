@@ -23,6 +23,11 @@ if (!$result) {
     echo "$c->errno ; $c->error";
 }
 else {
-    echo($result->num_rows > 0);
+    if ($result->num_rows > 0){
+        echo "true";
+    }
+    else {
+        echo "false";
+    }
 }
 ?>

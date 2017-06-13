@@ -43,7 +43,7 @@ if (isset($_SESSION['username'])){
                 var response = ajax.responseText;
                 console.log(response);
                 if (response === "true") {
-                    document.getElementById("usernameWarning").style.display = "";
+                    document.getElementById("usernameWarning").style.display = "inherit";
                 }
                 else {
                     document.getElementById("usernameWarning").style.display = "none";
