@@ -34,8 +34,8 @@ if (isset($_SESSION['username'])){
 
 </body>
 <script type="text/javascript">
-    var ajaxOnLoad = function () {
-        var inputUsername = document.getElementById("username");
+    var inputUsername = document.getElementById("username");
+    inputUsername.addEventListener("blur", function (){
         var ajax = new XMLHttpRequest();
         ajax.open("GET", "./ajax/searchForUsername.php?username=" + inputUsername.value);
         ajax.onreadystatechange = function () {
@@ -51,7 +51,6 @@ if (isset($_SESSION['username'])){
             }
         };
         ajax.send();
-    };
-    window.onload = ajaxOnLoad;
+    });
 </script>
 </html>
