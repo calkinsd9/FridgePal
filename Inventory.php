@@ -54,7 +54,7 @@ html;
     $rowNum = 0;
 
     foreach ($result as $row) {
-        //initially visible row
+        //displayed row
         $foodID = $row['id'];
         echo "<tr id=\"$foodID\">";
         $name = $row['name'];
@@ -74,11 +74,11 @@ html;
             }
         }
         echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem()\">Edit</button> </td>";
-        echo "<td><button class='deleteButton' id='btnDelete$foodID' onclick=\"deleteItem()\">Delete</button></td>";
+        echo "<td><button class='deleteButton' id='btnDelete$foodID'>Delete</button></td>";
         echo "</tr>\n";
 
         //hidden form for editing
-        echo "<tr id='edit$foodID' style='display: none'>";
+        echo "<tr id='edit$foodID' class='editRow'>";
         echo "<td></td>";
         foreach ($keys as $key) {
             if ($key === "spoilDate"){
@@ -99,6 +99,11 @@ html;
 <html>
 <head>
     <title>Your Inventory</title>
+    <style>
+        .editRow{
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <h1>Current Inventory:</h1>
@@ -111,7 +116,53 @@ printTable("Pantry");
 ?>
 
 <button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
-<script type="text/javascript" src="displayJS.js"></script>
+<script type="text/javascript">
+    var editItem = function() {
+        //hide everything in this's row
+        var row = this.parentNode.parentNode;
+        row.style.display = 'none';
+
+        //get the foodID
+        var foodID = row.id;
+
+        //get the hidden form that corresponds to that foodID
+        var editRow = document.getElementById('edit' + foodID);
+
+        //make it visible
+        editRow.style.display = 'inherit';
+    };
+</script>
+<script type="text/javascript">
+    var ajaxOnLoad = function () {
+        //attach event listeners to all Delete buttons and bind them to ajax calls
+        var deleteButtons = document.getElementsByClassName('deleteButton');
+        for (var i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener("click", function () {
+                var row = deleteButtons[i].parentNode.parentNode;
+                var deleteItemName = row.getElementsByClassName("name")[0].value;
+                if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
+                    var id = row.id;
+                    var ajax = new XMLHttpRequest();
+                    ajax.open("GET", "DeleteItem.php?id=" + id);
+                    ajax.onreadystatechange = function () {
+                        if (ajax.readyState === 4) {
+                            if (ajax.responseText === "deleted") {
+                                //remove the original row
+                                var table = row.parentNode;
+                                table.removeChild(row);
+                            }
+                            else {
+                                alert(ajax.responseText);
+                            }
+                        }
+                    };
+                    ajax.send();
+                }
+            });
+        }
+    };
+    window.onload = ajaxOnLoad;
+</script>
 <br />
 <br />
 <br />
