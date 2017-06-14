@@ -5,6 +5,11 @@ session_start();
 if (isset($_SESSION['username'])){
     header("Location: Inventory.php");
 }
+else {
+    if ($_POST['username'] === null){
+        header("Location: Welcome.php");
+    }
+}
 
 function initializePDO()
 {
