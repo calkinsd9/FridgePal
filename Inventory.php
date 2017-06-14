@@ -40,7 +40,7 @@ function printTable($location){
     $location_lowercase = strtolower($location);
     echo <<<html
     <h2>$location:</h2>
-    <table>
+    <table id="$location_lowercase">
         <tr>
             <th>Ingredient</th>
             <th>Food</th>
@@ -51,7 +51,6 @@ function printTable($location){
 html;
 
     $result = getItems($location_lowercase);
-    $rowNum = 0;
 
     foreach ($result as $row) {
         //displayed row
@@ -82,14 +81,27 @@ html;
         echo "<td></td>";
         foreach ($keys as $key) {
             if ($key === "spoilDate"){
-                echo "<td><input type='text' name='spoilDays' value='$interval'>";
+                echo "<td><input type='text' name='spoilDate' value='$interval'>";
             }
             else {
                 echo "<td><input type='text' name='$key' value='$row[$key]'></td>";
             }
         }
+
+        echo "<td><select id=\"locationSelect\" name=\"location\">";
+        $options = array("Fridge", "Freezer", "Pantry");
+        foreach ($options as $option){
+            if ($option === $location){
+                echo "<option value=\"" . strtolower($option) . "\" selected=\"selected\">" . $option . "</option>";
+            }
+            else {
+                echo "<option value=\"" . strtolower($option) . "\">" . $option . "</option>";
+            }
+        }
+        echo "</select></td>";
+
         echo "<td><button class='doneButton' id='btnDone$foodID' onclick=\"saveEdit()\">Done</button></td>";
-        $rowNum += 1;
+
     }
     echo "</table><br />";
 }
@@ -150,6 +162,57 @@ printTable("Pantry");
                                 //remove the original row
                                 var table = row.parentNode;
                                 table.removeChild(row);
+                            }
+                            else {
+                                alert(ajax.responseText);
+                            }
+                        }
+                    };
+                    ajax.send();
+                }
+            });
+        }
+
+        var doneButtons = document.getElementsByClassName('doneButton');
+        for (i = 0; i < doneButtons.length; i++) {
+            doneButtons[i].addEventListener("click", function () {
+                var row = this.parentNode.parentNode;
+                var table = row.parentNode;
+                var id = row.id.substr(4);
+                var name = row.getElementsByClassName("name")[0].innerHTML;
+                var type = row.getElementsByClassName("type")[0].innerHTML;
+                var spoilDays = row.getElementsByClassName("spoilDate")[0].innerHTML;
+                var location = table.id;
+
+                //form validation
+                if(name === "" || type === "" || isNaN(parseInt(spoilDays))) {
+                    alert("You must include a name, type, and number of days till spoiled");
+                }
+                else {
+                    //submit query
+                    var ajax = new XMLHttpRequest();
+                    ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
+                    ajax.onreadystatechange = function () {
+                        if (ajax.readyState === 4) {
+                            if (ajax.responseText === "true") {
+                                //change the original values, except location
+                                var displayRow = document.getElementById(id);
+                                displayRow.getElementsByClassName("name")[0].innerHTML = name;
+                                displayRow.getElementsByClassName("type")[0].innerHTML = type;
+                                displayRow.getElementsByClassName("spoilDate")[0].innerHTML = spoilDays;
+
+                                //if location changed, move the row and its edit row
+                                var originalLocation = displayRow.parentNode.id;
+                                if (originalLocation !== location){
+                                    var editRow = row;
+                                    //add to new table
+                                    document.getElementsByClassName(location)[0].appendChild(editRow);
+                                    document.getElementsByClassName(location)[0].appendChild(displayRow);
+
+                                    //remove from old table
+                                    editRow.parentNode.removeChild(editRow);
+                                    displayRow.parentNode.removeChild(displayRow);
+                                }
                             }
                             else {
                                 alert(ajax.responseText);
