@@ -139,7 +139,7 @@ printTable("Pantry");
         for (var i = 0; i < deleteButtons.length; i++) {
             deleteButtons[i].addEventListener("click", function () {
                 var row = this.parentNode.parentNode;
-                var deleteItemName = row.getElementsByClassName("name")[0].value;
+                var deleteItemName = row.getElementsByClassName("name")[0].innerHTML;
                 if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
                     var id = row.id;
                     var ajax = new XMLHttpRequest();

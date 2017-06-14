@@ -6,7 +6,7 @@ if (!isset($_SESSION['username'])){
     header("Location: LogIn.php");
 }
 
-if (!key_exists("name", $_POST)) {
+if (!key_exists("id", $_GET)) {
     header("Location: Inventory.php");
 }
 
@@ -27,7 +27,7 @@ function initializePDO() {
 }
 
 $pdo = initializePDO();
-$id = $_POST['id'];
+$id = $_GET['id'];
 //DELETE FROM foodMainStorage WHERE id = '$id';"
 $statement = $pdo->prepare('DELETE FROM foodMainStorage WHERE id = ?;');
 $statement->execute([$id]);
