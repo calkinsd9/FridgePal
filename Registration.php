@@ -43,7 +43,7 @@ $pdo = initializePDO();
 $statement = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ?;');
 $statement->execute([$username]);
 $result = $statement->fetch();
-if (count($result) > 0){
+if ($result !== false){
     echo <<<html
 <p>That username has already been taken.</p>
 <p>Please <a href="SignUp.php">click here</a> to try a different username.</p>
@@ -56,7 +56,7 @@ else {
     echo "<p>Congratulations $username!</p>";
     echo <<<html
     <p>You have successfully registered as a new member of FridgePal.</p>
-    <p>Please <a href="AddItems.php">click here</a>to begin adding items to your inventory.</p>    
+    <p>Please <a href="AddItems.php">click here</a> to begin adding items to your inventory.</p>    
 html;
 
 }

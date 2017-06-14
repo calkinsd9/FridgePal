@@ -20,7 +20,7 @@ if (isset($_SESSION['username'])){
 </head>
 <body>
 <h1>Sign Up</h1>
-<form action="Registration.php" method="post" onsubmit="event.preventDefault(); return validateForm();">
+<form id="signup" action="Registration.php" method="post" onsubmit="event.preventDefault(); return validateForm();">
     <label for="username">Username</label>
     <input type="text" name="username" id="username" value="" />
     <p class="warning" id="usernameWarning">* That username has already been taken; please choose another</p>
@@ -76,6 +76,8 @@ if (isset($_SESSION['username'])){
             alert("username and password must not be blank");
             return false;
         }
+
+        document.getElementById("signup").submit();
 
         return true;
     }
