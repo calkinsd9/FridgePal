@@ -135,10 +135,10 @@ printTable("Pantry");
 <script type="text/javascript">
     var ajaxOnLoad = function () {
         //attach event listeners to all Delete buttons and bind them to ajax calls
-        var deleteButtons = document.getElementsByClassName('deleteButton');
+        var deleteButtons = document.getElementsByClassName("deleteButton");
         for (var i = 0; i < deleteButtons.length; i++) {
             deleteButtons[i].addEventListener("click", function () {
-                var row = deleteButtons[i].parentNode.parentNode;
+                var row = this.parentNode.parentNode;
                 var deleteItemName = row.getElementsByClassName("name")[0].value;
                 if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
                     var id = row.id;
