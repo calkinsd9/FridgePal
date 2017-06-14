@@ -54,34 +54,34 @@ if (!isset($_SESSION['username'])){
         //name cannot be blank
         if (nameInput.value === ""){
             nameInput.className = "invalid";
-            document.getElementById("foodNotice").style.display = "initial";
+            document.getElementById("nameWarning").style.display = "initial";
             inputIsValid = false;
         }
         else {
             nameInput.className = "";
-            document.getElementById("foodNotice").style.display = "none";
+            document.getElementById("nameWarning").style.display = "none";
         }
 
         //type cannot be blank
         if (typeInput.value === ""){
             typeInput.className = "invalid";
-            document.getElementById("typeNotice").style.display = "initial";
+            document.getElementById("typeWarning").style.display = "initial";
             inputIsValid = false;
         }
         else {
             typeInput.className = "";
-            document.getElementById("typeNotice").style.display = "none";
+            document.getElementById("typeWarning").style.display = "none";
         }
 
         //spoilDays must be a number
-        if (isNaN(parseInt(spoilInput))){
+        if (isNaN(parseInt(spoilInput.value))){
             spoilInput.className = "invalid";
-            document.getElementById("spoilNotice").style.display = "initial";
+            document.getElementById("spoilWarning").style.display = "initial";
             inputIsValid = false;
         }
         else {
             spoilInput.className = "";
-            document.getElementById("spoilNotice").style.display = "none";
+            document.getElementById("spoilWarning").style.display = "none";
         }
 
 

@@ -22,7 +22,7 @@ function initializePDO() {
     return (new PDO($dsn, $user, $pass, $opt));
 }
 
-if (key_exists("food", $_POST)) {
+if (key_exists("name", $_POST)) {
     $username = $_SESSION['username'];
     $name = $_POST["name"];
     $type = $_POST["type"];
