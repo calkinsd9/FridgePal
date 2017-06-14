@@ -1,33 +1,30 @@
 <?php
-function connect()
-{
-    // Create a mysqli object connected to the database.
-    $connection = new mysqli("cis.gvsu.edu", "calkinda", "calkinda");
-    // Complain if the the connection fails.  (This would have to be more graceful
-    // in a production environment)
-    if (!$connection || $connection->connect_error) {
-        die('Unable to connect to database [' . $connection->connect_error . ']');
-    }
-    if (!$connection->select_db("calkinda")) {
-        die ("Unable to select database:  [" . $connection->error . "]");
-    }
-    return $connection;
-}
+function initializePDO() {
+    $host = 'cis.gvsu.edu';
+    $db = 'calkinda';
+    $user = 'calkinda';
+    $pass = 'calkinda';
+    $charset = 'utf8';
 
-$c = connect();
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $opt = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+    return (new PDO($dsn, $user, $pass, $opt));
+};
+
 $username = $_GET['username'];
-$sql = "SELECT username FROM foodUserPass WHERE username = '$username';";
-$result = $c->query($sql);
-if (!$result) {
-    echo "<p>Can't get any results.</p>";
-    echo "$c->errno ; $c->error";
+$pdo = initializePDO();
+$statement = $pdo->prepare('SELECT username FROM foodUserPass WHERE username = ?;');
+$statement->execute([$username]);
+$result = $statement->fetch();
+if ($result === false){
+    echo "false";
 }
 else {
-    if ($result->num_rows > 0){
-        echo "true";
-    }
-    else {
-        echo "false";
-    }
+    echo "true";
 }
+
 ?>

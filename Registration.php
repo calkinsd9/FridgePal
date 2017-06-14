@@ -11,8 +11,7 @@ else {
     }
 }
 
-function initializePDO()
-{
+function initializePDO() {
     $host = 'cis.gvsu.edu';
     $db = 'calkinda';
     $user = 'calkinda';
