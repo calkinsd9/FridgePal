@@ -41,13 +41,16 @@ function printTable($location){
     echo <<<html
     <h2>$location:</h2>
     <table id="$location_lowercase">
-        <tr>
-            <th>Ingredient</th>
-            <th>Food</th>
-            <th>Type</th>
-            <th>Spoils in</th>
-            <th></th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Food</th>
+                <th>Type</th>
+                <th>Spoils in</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tbody_$location_lowercase">
 html;
 
     $result = getItems($location_lowercase);
@@ -103,7 +106,7 @@ html;
         echo "<td><button class='doneButton' id='btnDone$foodID' >Done</button></td>";
 
     }
-    echo "</table><br />";
+    echo "</tbody></table><br />";
 }
 
 ?>
@@ -209,8 +212,8 @@ printTable("Pantry");
                                     var newDisplayRow = displayRow.cloneNode(true);
 
                                     //add to new table
-                                    document.getElementById(location).appendChild(newDisplayRow);
-                                    document.getElementById(location).appendChild(editRow);
+                                    document.getElementById("tbody_" + location).appendChild(newDisplayRow);
+                                    document.getElementById("tbody_" + location).appendChild(editRow);
 
                                     //switch visibility
                                     editRow.style.display = "none";
