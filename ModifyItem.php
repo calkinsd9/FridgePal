@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 //redirect logged in users to their Inventory
 if (!isset($_SESSION['username'])){
     header("Location: LogIn.php");
@@ -44,4 +46,9 @@ $statement->execute([$name, $type, $location, $spoilDate, $id]);
 $statement = $pdo->prepare('SELECT id FROM foodMainStorage WHERE id = ? AND name = ? AND type = ? AND location = ? AND spoilDate = ?;');
 $statement->execute([$id, $name, $type, $location, $spoilDate]);
 $result = $statement->fetchAll();
-echo count($result) > 0;
+if (count($result) > 0){
+    echo "true";
+}
+else {
+    echo "false";
+}

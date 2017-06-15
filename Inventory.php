@@ -72,7 +72,7 @@ html;
                 echo "<td class='$key'>" . $row[$key] . "</td>";
             }
         }
-        echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem()\">Edit</button> </td>";
+        echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem(this)\">Edit</button> </td>";
         echo "<td><button class='deleteButton' id='btnDelete$foodID'>Delete</button></td>";
         echo "</tr>\n";
 
@@ -179,11 +179,11 @@ printTable("Pantry");
                 var row = this.parentNode.parentNode;
                 var table = row.parentNode.parentNode;
                 var id = row.id.substr(4);
-                var name = row.getElementById("editname" + id).innerHTML;
-                var type = row.getElementById("edittype" + id).innerHTML;
-                var spoilDays = row.getElementById("editspoilDate" + id).innerHTML;
-
-                var location = table.id;
+                var name = document.getElementById("editname" + id).value;
+                var type = document.getElementById("edittype" + id).value;
+                var spoilDays = document.getElementById("editspoilDate" + id).value;
+                var locationSelect = document.getElementById("locationSelect" + id);
+                var location = locationSelect.options[locationSelect.selectedIndex].value;
 
                 //form validation
                 if(name === "" || type === "" || isNaN(parseInt(spoilDays))) {
