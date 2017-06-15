@@ -43,7 +43,7 @@ function printTable($location){
     <table id="$location_lowercase">
         <thead>
             <tr>
-                <th class="tableHeader">Ingredient</th>
+                <th>Ingredient</th>
                 <th class="tableHeader">Food</th>
                 <th class="tableHeader">Type</th>
                 <th class="tableHeader">Spoils in</th>
@@ -223,6 +223,11 @@ printTable("Pantry");
                                     row.parentNode.removeChild(row);
                                     displayRow.parentNode.removeChild(displayRow);
                                 }
+                                else{
+                                    //switch visibility
+                                    displayRow.style.display = "inherit";
+                                    row.style.display = "none";
+                                }
                             }
                             else {
                                 alert(ajax.responseText);
@@ -242,7 +247,14 @@ printTable("Pantry");
     for (var i = 0; i < tableHeaders.length; i++){
         tableHeaders[i].onclick = function () {
             var headerName = this.innerHTML;
-            var headerPosition = this.parentNode.getElementsByTagName('th').indexOf(headerName);
+            //TODO: find out how to get the position of the header in the row
+            var allHeaders = this.parentNode.getElementsByTagName('th');
+            for (var k = 0; k < allHeaders.length; k++){
+                if (allHeaders[k].innerHTML === headerName){
+                    break;
+                }
+            }
+            var headerPosition = k;
             var table = this.parentNode.parentNode.parentNode;
             var somethingMoved = true;
             do {
