@@ -81,14 +81,14 @@ html;
         echo "<td></td>";
         foreach ($keys as $key) {
             if ($key === "spoilDate"){
-                echo "<td><input type='text' name='spoilDate' value='$interval'>";
+                echo "<td><input id='edit$key$foodID' type='text' name='spoilDate' value='$interval'>";
             }
             else {
-                echo "<td><input type='text' name='$key' value='$row[$key]'></td>";
+                echo "<td><input id='edit$key$foodID' type='text' name='$key' value='$row[$key]'></td>";
             }
         }
 
-        echo "<td><select id=\"locationSelect\" name=\"location\">";
+        echo "<td><select id=\"locationSelect$foodID\" name=\"location\">";
         $options = array("Fridge", "Freezer", "Pantry");
         foreach ($options as $option){
             if ($option === $location){
@@ -100,7 +100,7 @@ html;
         }
         echo "</select></td>";
 
-        echo "<td><button class='doneButton' id='btnDone$foodID' onclick=\"saveEdit()\">Done</button></td>";
+        echo "<td><button class='doneButton' id='btnDone$foodID' >Done</button></td>";
 
     }
     echo "</table><br />";
@@ -129,9 +129,9 @@ printTable("Pantry");
 
 <button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
 <script type="text/javascript">
-    var editItem = function() {
+    var editItem = function(context) {
         //hide everything in this's row
-        var row = this.parentNode.parentNode;
+        var row = context.parentNode.parentNode;
         row.style.display = 'none';
 
         //get the foodID
@@ -177,11 +177,12 @@ printTable("Pantry");
         for (i = 0; i < doneButtons.length; i++) {
             doneButtons[i].addEventListener("click", function () {
                 var row = this.parentNode.parentNode;
-                var table = row.parentNode;
+                var table = row.parentNode.parentNode;
                 var id = row.id.substr(4);
-                var name = row.getElementsByClassName("name")[0].innerHTML;
-                var type = row.getElementsByClassName("type")[0].innerHTML;
-                var spoilDays = row.getElementsByClassName("spoilDate")[0].innerHTML;
+                var name = row.getElementById("editname" + id).innerHTML;
+                var type = row.getElementById("edittype" + id).innerHTML;
+                var spoilDays = row.getElementById("editspoilDate" + id).innerHTML;
+
                 var location = table.id;
 
                 //form validation
