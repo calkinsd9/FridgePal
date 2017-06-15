@@ -43,10 +43,10 @@ function printTable($location){
     <table id="$location_lowercase">
         <thead>
             <tr>
-                <th>Ingredient</th>
-                <th>Food</th>
-                <th>Type</th>
-                <th>Spoils in</th>
+                <th class="tableHeader">Ingredient</th>
+                <th class="tableHeader">Food</th>
+                <th class="tableHeader">Type</th>
+                <th class="tableHeader">Spoils in</th>
                 <th></th>
             </tr>
         </thead>
@@ -235,6 +235,34 @@ printTable("Pantry");
         }
     };
     window.onload = ajaxOnLoad;
+</script>
+<script type="text/javascript">
+    //attach sort method to columns
+    var tableHeaders = document.getElementsByClassName("tableHeader");
+    for (var i = 0; i < tableHeaders.length; i++){
+        tableHeaders[i].onclick = function () {
+            var headerName = this.innerHTML;
+            var headerPosition = this.parentNode.getElementsByTagName('th').indexOf(headerName);
+            var table = this.parentNode.parentNode.parentNode;
+            var somethingMoved = true;
+            do {
+                somethingMoved = false;
+                var rows = table.getElementsByTagName('tr');
+                for (var j = 1; j < (rows.length - 2); j++){
+                    var valueAbove = rows[j].getElementsByTagName('td')[headerPosition].innerHTML.toLowerCase();
+                    var valueBelow = rows[j+2].getElementsByTagName('td')[headerPosition].innerHTML.toLowerCase();
+
+                    if (valueAbove > valueBelow){
+                        rows[j].parentNode.insertBefore(rows[j+2], rows[j]);
+                        rows[j].parentNode.insertBefore(rows[j+2], rows[j+1]);
+                        somethingMoved = true;
+                        break;
+                    }
+                }
+            } while (somethingMoved);
+        }
+    }
+
 </script>
 <br />
 <br />
