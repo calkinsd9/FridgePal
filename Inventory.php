@@ -203,15 +203,21 @@ printTable("Pantry");
                                 displayRow.getElementsByClassName("spoilDate")[0].innerHTML = spoilDays;
 
                                 //if location changed, move the row and its edit row
-                                var originalLocation = displayRow.parentNode.id;
+                                var originalLocation = displayRow.parentNode.parentNode.id;
                                 if (originalLocation !== location){
-                                    var editRow = row;
+                                    var editRow = row.cloneNode(true);
+                                    var newDisplayRow = displayRow.cloneNode(true);
+
                                     //add to new table
-                                    document.getElementsByClassName(location)[0].appendChild(editRow);
-                                    document.getElementsByClassName(location)[0].appendChild(displayRow);
+                                    document.getElementById(location).appendChild(newDisplayRow);
+                                    document.getElementById(location).appendChild(editRow);
+
+                                    //switch visibility
+                                    editRow.style.display = "none";
+                                    newDisplayRow.style.display = "inherit";
 
                                     //remove from old table
-                                    editRow.parentNode.removeChild(editRow);
+                                    row.parentNode.removeChild(row);
                                     displayRow.parentNode.removeChild(displayRow);
                                 }
                             }
