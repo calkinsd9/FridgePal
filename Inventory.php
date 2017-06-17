@@ -84,7 +84,7 @@ html;
         echo "<td></td>";
         foreach ($keys as $key) {
             if ($key === "spoilDate"){
-                echo "<td><input id='edit$key$foodID' type='text' name='spoilDate' value='$interval'>";
+                echo "<td><input id='edit$key$foodID' type='text' name='spoilDate' value='$interval'></td>";
             }
             else {
                 echo "<td><input id='edit$key$foodID' type='text' name='$key' value='$row[$key]'></td>";
@@ -103,7 +103,7 @@ html;
         }
         echo "</select></td>";
 
-        echo "<td><button class='doneButton' id='btnDone$foodID' >Done</button></td>";
+        echo "<td><button class='doneButton' id='btnDone$foodID' >Done</button></td></tr>";
 
     }
     echo "</tbody></table><br />";
@@ -117,6 +117,9 @@ html;
     <style>
         .editRow{
             display: none;
+        }
+        table, th, td {
+            border: 1px solid black;
         }
     </style>
 </head>
@@ -214,6 +217,9 @@ printTable("Pantry");
                                     //add to new table
                                     document.getElementById("tbody_" + location).appendChild(newDisplayRow);
                                     document.getElementById("tbody_" + location).appendChild(editRow);
+                                    //TODO: after moving, delete and done buttons no longer work
+                                    //TODO: migrate the event listener functions for delete and done buttons
+                                    //TODO: so that they're accessible inside this method.
 
                                     //switch visibility
                                     editRow.style.display = "none";
@@ -239,6 +245,11 @@ printTable("Pantry");
             });
         }
     };
+
+//    var hiddenRows = document.getElementsByClassName("editRow");
+//    for (var l = 0; l < hiddenRows; l++){
+//        hiddenRows[l].style.display = "none";
+//    }
     window.onload = ajaxOnLoad;
 </script>
 <script type="text/javascript">
