@@ -80,7 +80,8 @@ html;
         echo "<td>";
         echo "<input type=\"button\" id=\"btnEdit$foodID\" value=\"Edit\" class=\"edit\" onclick=\"editItem('$foodID')\">";
         echo "<input type=\"button\" id=\"btnSave$foodID\" value=\"Save\" class=\"save\" onclick=\"saveItem('$foodID')\">";
-        echo "<button class='deleteButton' id='btnDelete$foodID'>Delete</button>";
+        echo "<input type=\"button\" id=\"btnDelete$foodID\" value=\"Delete\" class=\"delete\" onclick=\"deleteItem('$foodID')\">";
+//        echo "<button class='deleteButton' id='btnDelete$foodID'>Delete</button>";
         echo "</td>";
         echo "</tr>";
 
@@ -258,6 +259,27 @@ printTable("Pantry");
         //if row needs to be moved, move it
 
         //otherwise, update data
+    }
+
+    var deleteItem = function (id) {
+        var name = document.getElementById("name" + id).innerHTML;
+        if (confirm("Are you sure that you want to remove " + name + " from your inventory?")) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "DeleteItem.php?id=" + id);
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState === 4) {
+                    if (ajax.responseText === "deleted") {
+                        //remove the original row
+                        document.removeChild(document.getElementById(id));
+                    }
+                    else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.send();
+        }
+
     }
 </script>
 <script type="text/javascript">
