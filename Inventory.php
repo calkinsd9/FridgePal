@@ -60,7 +60,7 @@ html;
         $foodID = $row['id'];
         echo "<tr id=\"$foodID\">";
         $name = $row['name'];
-        echo "<td><input class='checkboxes' type=\"checkbox\" name=\"\" value=\"$name\"></td>";
+        echo "<td><input id='checkbox$foodID' class='checkboxes' type=\"checkbox\" name=\"\" value=\"$name\"></td>";
         $keys = array("name", "type", "spoilDate");
         // iterate over all the columns.  Each column is a <td> element.
         foreach ($keys as $key) {
@@ -69,15 +69,20 @@ html;
                 $spoilDate = date_create($row[$key]);
                 $interval = date_diff($today, $spoilDate);
                 $interval = intval($interval->format('%r%a'));
-                echo "<td class='$key'>$interval</td>";
+                echo "<td class='$key' id='$key$foodID'>$interval</td>";
             }
             else {
-                echo "<td class='$key'>" . $row[$key] . "</td>";
+                echo "<td class='$key' id='$key$foodID'>" . $row[$key] . "</td>";
             }
         }
-        echo "<td> <button class='editButton' id='btnEdit$foodID' onclick=\"editItem(this)\">Edit</button> </td>";
-        echo "<td><button class='deleteButton' id='btnDelete$foodID'>Delete</button></td>";
-        echo "</tr>\n";
+
+        //edit, delete, and save buttons
+        echo "<td>";
+        echo "<input type=\"button\" id=\"btnEdit$foodID\" value=\"Edit\" class=\"edit\" onclick=\"editItem('$foodID')\">";
+        echo "<input type=\"button\" id=\"btnSave$foodID\" value=\"Save\" class=\"save\" onclick=\"saveItem('$foodID')\">";
+        echo "<button class='deleteButton' id='btnDelete$foodID'>Delete</button>";
+        echo "</td>";
+        echo "</tr>";
 
         //hidden form for editing
         echo "<tr id='edit$foodID' class='editRow'>";
@@ -135,7 +140,53 @@ printTable("Pantry");
 
 <button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
 <script type="text/javascript">
-    var editItem = function(context) {
+    var editItem = function(id) {
+        //hide the edit button
+        document.getElementById("btnEdit" + id).style.display = "none";
+
+        //reveal the save button
+        document.getElementById("btnSave" + id).style.display = "block";
+
+        //get the current data
+        var checkbox = document.getElementById("checkbox" + id);
+        var name = document.getElementById("name" + id);
+        var type = document.getElementById("type" + id);
+        var spoilDays = document.getElementById("spoilDate" + id);
+
+        var nameData = name.innerHTML;
+        var typeData = type.innerHTML;
+        var spoilDaysData = spoilDays.innerHTML;
+        var location = name.parentNode.parentNode.parentNode.id;
+
+        //change the innerHTML on the old cells to be inputs
+        var selectBoxHTML = "<select id='locationSelect" + id + "' name='" + location + "'>";
+        var options = ['Fridge', 'Freezer', 'Pantry'];
+        for (var i = 0; i < options.length; i++){
+            if (options[i] === location){
+                //<option value=\"" . strtolower($option) . "\" selected=\"selected\">" . $option . "</option>"
+                selectBoxHTML += "<option value='" + options[i].toLowerCase() + "' selected='selected'>" + options[i] + "</option>";
+            }
+            else {
+                selectBoxHTML += "<option value='" + options[i].toLowerCase() + "'>" + options[i] + "</option>";
+            }
+            selectBoxHTML += "</select>";
+        }
+
+        checkbox.innerHTML = selectBoxHTML;
+        name.innerHTML = "<input type='text' id='inputName" + id + "' value='" + nameData + "'>";
+        type.innerHTML = "<input type='text' id='inputType" + id + "' value='" + typeData + "'>";
+        spoilDays.innerHTML = "<input type='text' id='inputSpoilDays" + id + "' value='" + spoilDaysData + "'>";
+
+
+
+
+
+
+
+
+
+        //old script
+        /*
         //hide everything in this's row
         var row = context.parentNode.parentNode;
         row.style.display = 'none';
@@ -148,6 +199,8 @@ printTable("Pantry");
 
         //make it visible
         editRow.style.display = 'inherit';
+
+        */
     };
 </script>
 <script type="text/javascript">
