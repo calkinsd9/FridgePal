@@ -151,98 +151,110 @@ printTable("Pantry");
     };
 </script>
 <script type="text/javascript">
+    var addDoneButtonClickedFunction = function (node) {
+        node.addEventListener("click", doneButtonClicked)
+    };
+
+    var doneButtonClicked = function () {
+        var row = this.parentNode.parentNode;
+        var table = row.parentNode.parentNode;
+        var id = row.id.substr(4);
+        var name = document.getElementById("editname" + id).value;
+        var type = document.getElementById("edittype" + id).value;
+        var spoilDays = document.getElementById("editspoilDate" + id).value;
+        var locationSelect = document.getElementById("locationSelect" + id);
+        var location = locationSelect.options[locationSelect.selectedIndex].value;
+
+        //form validation
+        if(name === "" || type === "" || isNaN(parseInt(spoilDays))) {
+            alert("You must include a name, type, and number of days till spoiled");
+        }
+        else {
+            //submit query
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState === 4) {
+                    if (ajax.responseText === "true") {
+                        //change the original values, except location
+                        var displayRow = document.getElementById(id);
+                        displayRow.getElementsByClassName("name")[0].innerHTML = name;
+                        displayRow.getElementsByClassName("type")[0].innerHTML = type;
+                        displayRow.getElementsByClassName("spoilDate")[0].innerHTML = spoilDays;
+
+                        //if location changed, move the row and its edit row
+                        var originalLocation = displayRow.parentNode.parentNode.id;
+                        if (originalLocation !== location){
+                            var editRow = row.cloneNode(true);
+                            var newDisplayRow = displayRow.cloneNode(true);
+
+                            //add to new table
+                            document.getElementById("tbody_" + location).appendChild(newDisplayRow);
+                            document.getElementById("tbody_" + location).appendChild(editRow);
+                            var id = displayRow.id;
+
+                            //switch visibility
+                            editRow.style.display = "none";
+                            newDisplayRow.style.display = "inherit";
+
+                            //remove from old table
+                            row.parentNode.removeChild(row);
+                            displayRow.parentNode.removeChild(displayRow);
+
+                            //attach new event listeners to buttons
+                            var doneButton = document.getElementById("btnDone" + id);
+                            var deleteButton = document.getElementById("btnDelete" + id);
+                            addDoneButtonClickedFunction(doneButton);
+                            deleteButton.addEventListener("click", deleteButtonClicked);
+                        }
+                        else{
+                            //switch visibility
+                            displayRow.style.display = "inherit";
+                            row.style.display = "none";
+                        }
+                    }
+                    else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.send();
+        }
+    };
+
+    var deleteButtonClicked = function () {
+        var row = this.parentNode.parentNode;
+        var deleteItemName = row.getElementsByClassName("name")[0].innerHTML;
+        if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
+            var id = row.id;
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "DeleteItem.php?id=" + id);
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState === 4) {
+                    if (ajax.responseText === "deleted") {
+                        //remove the original row
+                        var table = row.parentNode;
+                        table.removeChild(row);
+                    }
+                    else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.send();
+        }
+    };
+
     var ajaxOnLoad = function () {
         //attach event listeners to all Delete buttons and bind them to ajax calls
         var deleteButtons = document.getElementsByClassName("deleteButton");
         for (var i = 0; i < deleteButtons.length; i++) {
-            deleteButtons[i].addEventListener("click", function () {
-                var row = this.parentNode.parentNode;
-                var deleteItemName = row.getElementsByClassName("name")[0].innerHTML;
-                if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
-                    var id = row.id;
-                    var ajax = new XMLHttpRequest();
-                    ajax.open("GET", "DeleteItem.php?id=" + id);
-                    ajax.onreadystatechange = function () {
-                        if (ajax.readyState === 4) {
-                            if (ajax.responseText === "deleted") {
-                                //remove the original row
-                                var table = row.parentNode;
-                                table.removeChild(row);
-                            }
-                            else {
-                                alert(ajax.responseText);
-                            }
-                        }
-                    };
-                    ajax.send();
-                }
-            });
+            deleteButtons[i].addEventListener("click", deleteButtonClicked);
         }
 
         var doneButtons = document.getElementsByClassName('doneButton');
         for (i = 0; i < doneButtons.length; i++) {
-            doneButtons[i].addEventListener("click", function () {
-                var row = this.parentNode.parentNode;
-                var table = row.parentNode.parentNode;
-                var id = row.id.substr(4);
-                var name = document.getElementById("editname" + id).value;
-                var type = document.getElementById("edittype" + id).value;
-                var spoilDays = document.getElementById("editspoilDate" + id).value;
-                var locationSelect = document.getElementById("locationSelect" + id);
-                var location = locationSelect.options[locationSelect.selectedIndex].value;
-
-                //form validation
-                if(name === "" || type === "" || isNaN(parseInt(spoilDays))) {
-                    alert("You must include a name, type, and number of days till spoiled");
-                }
-                else {
-                    //submit query
-                    var ajax = new XMLHttpRequest();
-                    ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
-                    ajax.onreadystatechange = function () {
-                        if (ajax.readyState === 4) {
-                            if (ajax.responseText === "true") {
-                                //change the original values, except location
-                                var displayRow = document.getElementById(id);
-                                displayRow.getElementsByClassName("name")[0].innerHTML = name;
-                                displayRow.getElementsByClassName("type")[0].innerHTML = type;
-                                displayRow.getElementsByClassName("spoilDate")[0].innerHTML = spoilDays;
-
-                                //if location changed, move the row and its edit row
-                                var originalLocation = displayRow.parentNode.parentNode.id;
-                                if (originalLocation !== location){
-                                    var editRow = row.cloneNode(true);
-                                    var newDisplayRow = displayRow.cloneNode(true);
-
-                                    //add to new table
-                                    document.getElementById("tbody_" + location).appendChild(newDisplayRow);
-                                    document.getElementById("tbody_" + location).appendChild(editRow);
-                                    //TODO: after moving, delete and done buttons no longer work
-                                    //TODO: migrate the event listener functions for delete and done buttons
-                                    //TODO: so that they're accessible inside this method.
-
-                                    //switch visibility
-                                    editRow.style.display = "none";
-                                    newDisplayRow.style.display = "inherit";
-
-                                    //remove from old table
-                                    row.parentNode.removeChild(row);
-                                    displayRow.parentNode.removeChild(displayRow);
-                                }
-                                else{
-                                    //switch visibility
-                                    displayRow.style.display = "inherit";
-                                    row.style.display = "none";
-                                }
-                            }
-                            else {
-                                alert(ajax.responseText);
-                            }
-                        }
-                    };
-                    ajax.send();
-                }
-            });
+            doneButtons[i].addEventListener("click", doneButtonClicked);
         }
     };
 
@@ -258,7 +270,6 @@ printTable("Pantry");
     for (var i = 0; i < tableHeaders.length; i++){
         tableHeaders[i].onclick = function () {
             var headerName = this.innerHTML;
-            //TODO: find out how to get the position of the header in the row
             var allHeaders = this.parentNode.getElementsByTagName('th');
             for (var k = 0; k < allHeaders.length; k++){
                 if (allHeaders[k].innerHTML === headerName){
