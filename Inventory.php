@@ -145,7 +145,7 @@ printTable("Pantry");
         document.getElementById("btnEdit" + id).style.display = "none";
 
         //reveal the save button
-        document.getElementById("btnSave" + id).style.display = "block";
+        document.getElementById("btnSave" + id).style.display = "inline";
 
         //get the current data
         var checkbox = document.getElementById("checkbox" + id);
@@ -234,13 +234,33 @@ printTable("Pantry");
                     type.innerHTML = typeData;
                     spoilDays.innerHTML = spoilDaysData;
 
+                    //hide the save button
+                    document.getElementById("btnSave" + id).style.display = "none";
+
+                    //reveal the edit button
+                    document.getElementById("btnEdit" + id).style.display = "inline";
+
                     //if location changed, move the row to new table
+                    var originalLocation = name.parentNode.parentNode.parentNode.id;
+                    if (locationData !== originalLocation){
+                        //clone current row
+                        var originalRow = document.getElementById(id);
+                        var cloneRow = originalRow.cloneNode(true);
+
+                        //add clone to desired table
+                        var destinationTable = document.getElementById(locationData);
+                        destinationTable.appendChild(cloneRow);
+
+                        //remove original row
+                        document.getElementById(originalLocation).removeChild(originalRow);
+                    }
                 }
                 else {
                     alert(ajax.responseText);
                 }
             }
-        }
+        };
+        ajax.send();
 
 
         //if row needs to be moved, move it
