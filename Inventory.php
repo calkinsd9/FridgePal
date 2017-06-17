@@ -60,7 +60,7 @@ html;
         $foodID = $row['id'];
         echo "<tr id=\"$foodID\">";
         $name = $row['name'];
-        echo "<td><input id='checkbox$foodID' class='checkboxes' type=\"checkbox\" name=\"\" value=\"$name\"></td>";
+        echo "<td id='checkbox$foodID'><input class='checkboxes' type=\"checkbox\" name=\"\" value=\"$name\"></td>";
         $keys = array("name", "type", "spoilDate");
         // iterate over all the columns.  Each column is a <td> element.
         foreach ($keys as $key) {
@@ -162,15 +162,15 @@ printTable("Pantry");
         var selectBoxHTML = "<select id='locationSelect" + id + "' name='" + location + "'>";
         var options = ['Fridge', 'Freezer', 'Pantry'];
         for (var i = 0; i < options.length; i++){
-            if (options[i] === location){
+            if (options[i].toLowerCase() === location){
                 //<option value=\"" . strtolower($option) . "\" selected=\"selected\">" . $option . "</option>"
                 selectBoxHTML += "<option value='" + options[i].toLowerCase() + "' selected='selected'>" + options[i] + "</option>";
             }
             else {
                 selectBoxHTML += "<option value='" + options[i].toLowerCase() + "'>" + options[i] + "</option>";
             }
-            selectBoxHTML += "</select>";
         }
+        selectBoxHTML += "</select>";
 
         checkbox.innerHTML = selectBoxHTML;
         name.innerHTML = "<input type='text' id='inputName" + id + "' value='" + nameData + "'>";
@@ -243,16 +243,8 @@ printTable("Pantry");
                     //if location changed, move the row to new table
                     var originalLocation = name.parentNode.parentNode.parentNode.id;
                     if (locationData !== originalLocation){
-                        //clone current row
-                        var originalRow = document.getElementById(id);
-                        var cloneRow = originalRow.cloneNode(true);
-
-                        //add clone to desired table
                         var destinationTable = document.getElementById(locationData);
-                        destinationTable.appendChild(cloneRow);
-
-                        //remove original row
-                        document.getElementById(originalLocation).removeChild(originalRow);
+                        destinationTable.getElementsByTagName("tbody")[0].appendChild(document.getElementById(id));
                     }
                 }
                 else {
