@@ -152,88 +152,90 @@ printTable("Pantry");
 </script>
 <script type="text/javascript">
     var addDoneButtonClickedFunction = function (node) {
-        node.addEventListener("click", doneButtonClicked)
+        node.addEventListener("click", doneButtonClicked(node))
     };
 
-    var doneButtonClicked = function () {
-        var row = this.parentNode.parentNode;
-        var table = row.parentNode.parentNode;
-        var id = row.id.substr(4);
-        var name = document.getElementById("editname" + id).value;
-        var type = document.getElementById("edittype" + id).value;
-        var spoilDays = document.getElementById("editspoilDate" + id).value;
-        var locationSelect = document.getElementById("locationSelect" + id);
-        var location = locationSelect.options[locationSelect.selectedIndex].value;
+    var doneButtonClicked = function (passedNode) {
+        return function () {
+            var row = passedNode.parentNode.parentNode;
+            var table = row.parentNode.parentNode;
+            var id = row.id.substr(4);
+            var name = document.getElementById("editname" + id).value;
+            var type = document.getElementById("edittype" + id).value;
+            var spoilDays = document.getElementById("editspoilDate" + id).value;
+            var locationSelect = document.getElementById("locationSelect" + id);
+            var location = locationSelect.options[locationSelect.selectedIndex].value;
 
-        //form validation
-        if(name === "" || type === "" || isNaN(parseInt(spoilDays))) {
-            alert("You must include a name, type, and number of days till spoiled");
-        }
-        else {
-            //submit query
-            var ajax = new XMLHttpRequest();
-            ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
-            ajax.onreadystatechange = function (passedEditRow) {
-                return function() {
-                    var foodID = passedEditRow.id.substr(4);
-                    if (ajax.readyState === 4) {
-                        if (ajax.responseText === "true") {
-                            //change the original values, except location
-                            var displayRow = document.getElementById(foodID);
-                            var displayRowChildren = displayRow.childNodes;
-                            for (var m = 0; m < displayRowChildren.length; m++) {
-                                switch (displayRowChildren[m].className) {
-                                    case "name":
-                                        displayRowChildren[m].innerHTML = name;
-                                        break;
-                                    case "type":
-                                        displayRowChildren[m].innerHTML = type;
-                                        break;
-                                    case "spoilDate":
-                                        displayRowChildren[m].innerHTML = spoilDays;
-                                        break;
-                                    default:
-                                        break;
+            //form validation
+            if (name === "" || type === "" || isNaN(parseInt(spoilDays))) {
+                alert("You must include a name, type, and number of days till spoiled");
+            }
+            else {
+                //submit query
+                var ajax = new XMLHttpRequest();
+                ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
+                ajax.onreadystatechange = function (passedEditRow) {
+                    return function () {
+                        var foodID = passedEditRow.id.substr(4);
+                        if (ajax.readyState === 4) {
+                            if (ajax.responseText === "true") {
+                                //change the original values, except location
+                                var displayRow = document.getElementById(foodID);
+                                var displayRowChildren = displayRow.childNodes;
+                                for (var m = 0; m < displayRowChildren.length; m++) {
+                                    switch (displayRowChildren[m].className) {
+                                        case "name":
+                                            displayRowChildren[m].innerHTML = name;
+                                            break;
+                                        case "type":
+                                            displayRowChildren[m].innerHTML = type;
+                                            break;
+                                        case "spoilDate":
+                                            displayRowChildren[m].innerHTML = spoilDays;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+
+                                //if location changed, move the row and its edit row
+                                var originalLocation = displayRow.parentNode.parentNode.id;
+                                if (originalLocation !== location) {
+                                    var editRow = passedEditRow.cloneNode(true);
+                                    var newDisplayRow = displayRow.cloneNode(true);
+
+                                    //add to new table
+                                    document.getElementById("tbody_" + location).appendChild(newDisplayRow);
+                                    document.getElementById("tbody_" + location).appendChild(editRow);
+
+                                    //switch visibility
+                                    editRow.style.display = "none";
+                                    newDisplayRow.style.display = "inherit";
+
+                                    //remove from old table
+                                    passedEditRow.parentNode.removeChild(passedEditRow);
+                                    displayRow.parentNode.removeChild(displayRow);
+
+                                    //attach new event listeners to buttons
+                                    var doneButton = document.getElementById("btnDone" + foodID);
+                                    var deleteButton = document.getElementById("btnDelete" + foodID);
+                                    addDoneButtonClickedFunction(doneButton);
+                                    deleteButton.addEventListener("click", deleteButtonClicked);
+                                }
+                                else {
+                                    //switch visibility
+                                    displayRow.style.display = "inherit";
+                                    passedEditRow.style.display = "none";
                                 }
                             }
-
-                            //if location changed, move the row and its edit row
-                            var originalLocation = displayRow.parentNode.parentNode.id;
-                            if (originalLocation !== location) {
-                                var editRow = passedEditRow.cloneNode(true);
-                                var newDisplayRow = displayRow.cloneNode(true);
-
-                                //add to new table
-                                document.getElementById("tbody_" + location).appendChild(newDisplayRow);
-                                document.getElementById("tbody_" + location).appendChild(editRow);
-
-                                //switch visibility
-                                editRow.style.display = "none";
-                                newDisplayRow.style.display = "inherit";
-
-                                //remove from old table
-                                passedEditRow.parentNode.removeChild(passedEditRow);
-                                displayRow.parentNode.removeChild(displayRow);
-
-                                //attach new event listeners to buttons
-                                var doneButton = document.getElementById("btnDone" + foodID);
-                                var deleteButton = document.getElementById("btnDelete" + foodID);
-                                addDoneButtonClickedFunction(doneButton);
-                                deleteButton.addEventListener("click", deleteButtonClicked);
-                            }
                             else {
-                                //switch visibility
-                                displayRow.style.display = "inherit";
-                                passedEditRow.style.display = "none";
+                                alert(ajax.responseText);
                             }
                         }
-                        else {
-                            alert(ajax.responseText);
-                        }
-                    }
-                }(row);
-            };
-            ajax.send();
+                    }(row);
+                };
+                ajax.send();
+            }
         }
     };
 
