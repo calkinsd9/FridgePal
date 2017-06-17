@@ -202,6 +202,51 @@ printTable("Pantry");
 
         */
     };
+    
+    var saveItem = function (id) {
+        //get modified data
+        var nameData = document.getElementById("inputName" + id).value;
+        var typeData = document.getElementById("inputType" + id).value;
+        var spoilDaysData = document.getElementById("inputSpoilDays" + id).value;
+        var locationSelect = document.getElementById("locationSelect" + id);
+        var locationData = locationSelect.options[locationSelect.selectedIndex].value;
+
+        //validate data
+        if (nameData === "" || typeData === "" || isNaN(parseInt(spoilDaysData))) {
+            alert("You must include a name, type, and number of days till spoiled");
+            return;
+        }
+
+        //if valid, save data using ajax call
+        var ajax = new XMLHttpRequest();
+        ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + nameData + "&type=" + typeData + "&spoilDays=" + spoilDaysData + "&location=" + locationData);
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState === 4){
+                if (ajax.responseText === "true") {
+                    //change the row back to a display row with the new values
+                    var checkbox = document.getElementById("checkbox" + id);
+                    var name = document.getElementById("name" + id);
+                    var type = document.getElementById("type" + id);
+                    var spoilDays = document.getElementById("spoilDate" + id);
+
+                    checkbox.innerHTML = "<input id='checkbox" + id + "' class='checkboxes' type='checkbox' name='' value='" + nameData + "'>";
+                    name.innerHTML = nameData;
+                    type.innerHTML = typeData;
+                    spoilDays.innerHTML = spoilDaysData;
+
+                    //if location changed, move the row to new table
+                }
+                else {
+                    alert(ajax.responseText);
+                }
+            }
+        }
+
+
+        //if row needs to be moved, move it
+
+        //otherwise, update data
+    }
 </script>
 <script type="text/javascript">
     var addDoneButtonClickedFunction = function (node) {
