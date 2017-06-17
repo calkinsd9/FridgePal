@@ -178,9 +178,22 @@ printTable("Pantry");
                     if (ajax.responseText === "true") {
                         //change the original values, except location
                         var displayRow = document.getElementById(id);
-                        displayRow.getElementsByClassName("name")[0].innerHTML = name;
-                        displayRow.getElementsByClassName("type")[0].innerHTML = type;
-                        displayRow.getElementsByClassName("spoilDate")[0].innerHTML = spoilDays;
+                        var displayRowChildren = displayRow.childNodes;
+                        for (var m = 0; m < displayRowChildren.length; m++){
+                            switch (displayRowChildren[m].className){
+                                case "name":
+                                    displayRowChildren[m].innerHTML = name;
+                                    break;
+                                case "type":
+                                    displayRowChildren[m].innerHTML = type;
+                                    break;
+                                case "spoilDate":
+                                    displayRowChildren[m].innerHTML = spoilDays;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
 
                         //if location changed, move the row and its edit row
                         var originalLocation = displayRow.parentNode.parentNode.id;
