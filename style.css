@@ -1,6 +1,35 @@
-title, h1, h2{
+title, h1, h2, body{
     font-family: Michroma, Helvetica, Arial, sans-serif;
+    text-align: center;
 }
-.edit{
+table{
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    margin: auto;
+    width: 700px;
+    padding: 10px;
+    border-radius: 15px 50px;
+    background-color: lightblue;
+}
+.save{
     display: none;
+}
+td{
+    text-align: center;
+}
+th{
+    border-bottom:1pt solid black;
+    border-collapse: collapse;
+}
+html {
+    background: url('fruit.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+div#main-content{
+    background: rgba(181, 224, 238, 0.25);
+    display: inline-block;
+    padding: 20px;
+    border-radius: 20px
 }

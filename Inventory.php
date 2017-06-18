@@ -39,11 +39,11 @@ function getItems($location) {
 function printTable($location){
     $location_lowercase = strtolower($location);
     echo <<<html
-    <h2>$location:</h2>
+    <h2>$location</h2>
     <table id="$location_lowercase">
         <thead>
             <tr>
-                <th>Ingredient</th>
+                <th>Include in<br>search</th>
                 <th class="tableHeader">Food</th>
                 <th class="tableHeader">Type</th>
                 <th class="tableHeader">Spoils in</th>
@@ -92,11 +92,13 @@ html;
 <html>
 <head>
     <title>Your Inventory</title>
-    <style>
-    </style>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link rel="stylesheet" href="testpage.css">
 </head>
 <body>
-<h1>Current Inventory:</h1>
+<div id="main-content">
+<h1>Current Inventory</h1>
 <br/>
 
 <?php
@@ -279,5 +281,6 @@ printTable("Pantry");
 <p>You are currently logged in as <?php echo $_SESSION['username']?>.</p>
 <a href="./AddItems.php" >Add Items</a>
 <a href="./Login.php?logout=true" >Click here to log out</a>
+</div>
 </body>
 </html>
