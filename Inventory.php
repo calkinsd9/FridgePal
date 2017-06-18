@@ -93,12 +93,6 @@ html;
 <head>
     <title>Your Inventory</title>
     <style>
-        .editRow{
-            display: none;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
     </style>
 </head>
 <body>
@@ -121,7 +115,7 @@ printTable("Pantry");
                 queryString += checkboxes[i].value + ",";
             }
         }
-        location.href = "http://allrecipes.com/search/results/" + queryString;
+        window.open("http://allrecipes.com/search/results/" + queryString);
     };
 </script>
 <script type="text/javascript">
