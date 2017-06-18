@@ -243,15 +243,23 @@ printTable("Pantry");
             do {
                 somethingMoved = false;
                 var rows = table.getElementsByTagName('tr');
-                for (var j = 1; j < (rows.length - 2); j++){
+                for (var j = 1; j < (rows.length - 1); j++){
                     var valueAbove = rows[j].getElementsByTagName('td')[headerPosition].innerHTML.toLowerCase();
-                    var valueBelow = rows[j+2].getElementsByTagName('td')[headerPosition].innerHTML.toLowerCase();
+                    var valueBelow = rows[j+1].getElementsByTagName('td')[headerPosition].innerHTML.toLowerCase();
 
-                    if (valueAbove > valueBelow){
-                        rows[j].parentNode.insertBefore(rows[j+2], rows[j]);
-                        rows[j].parentNode.insertBefore(rows[j+2], rows[j+1]);
-                        somethingMoved = true;
-                        break;
+                    if (isNaN(parseInt(valueAbove))){
+                        if (valueAbove > valueBelow) {
+                            rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                            somethingMoved = true;
+                            break;
+                        }
+                    }
+                    else {
+                        if (parseInt(valueAbove) > parseInt(valueBelow)){
+                            rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                            somethingMoved = true;
+                            break;
+                        }
                     }
                 }
             } while (somethingMoved);
