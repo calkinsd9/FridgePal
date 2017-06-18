@@ -27,7 +27,7 @@ if (isset($_SESSION['username'])){
     <p class="warning" id="passwordWarning">* Password cannot be blank</p>
     <br>
     <br>
-    <input id="btnSubmit" type="submit" name="submitButton" value="Submit"/>
+    <input id="btnSubmit" class="button" type="submit" name="submitButton" value="Submit"/>
 </form>
 
 </body>

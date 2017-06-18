@@ -38,7 +38,7 @@ if (!isset($_SESSION['username'])){
         <input id="spoilInput" type="number" name="spoil" value="" />
         <p class="warning" id="spoilWarning">* must be a valid number</p>
 
-        <input id="submitButton" type="submit" name="submitButton" value="Submit" />
+        <input id="submitButton" class="button" type="submit" name="submitButton" value="Submit" />
         <br />
     </form>
 </div>
