@@ -81,36 +81,8 @@ html;
         echo "<input type=\"button\" id=\"btnEdit$foodID\" value=\"Edit\" class=\"edit\" onclick=\"editItem('$foodID')\">";
         echo "<input type=\"button\" id=\"btnSave$foodID\" value=\"Save\" class=\"save\" onclick=\"saveItem('$foodID')\">";
         echo "<input type=\"button\" id=\"btnDelete$foodID\" value=\"Delete\" class=\"delete\" onclick=\"deleteItem('$foodID')\">";
-//        echo "<button class='deleteButton' id='btnDelete$foodID'>Delete</button>";
         echo "</td>";
         echo "</tr>";
-
-        //hidden form for editing
-        echo "<tr id='edit$foodID' class='editRow'>";
-        echo "<td></td>";
-        foreach ($keys as $key) {
-            if ($key === "spoilDate"){
-                echo "<td><input id='edit$key$foodID' type='text' name='spoilDate' value='$interval'></td>";
-            }
-            else {
-                echo "<td><input id='edit$key$foodID' type='text' name='$key' value='$row[$key]'></td>";
-            }
-        }
-
-        echo "<td><select id=\"locationSelect$foodID\" name=\"location\">";
-        $options = array("Fridge", "Freezer", "Pantry");
-        foreach ($options as $option){
-            if ($option === $location){
-                echo "<option value=\"" . strtolower($option) . "\" selected=\"selected\">" . $option . "</option>";
-            }
-            else {
-                echo "<option value=\"" . strtolower($option) . "\">" . $option . "</option>";
-            }
-        }
-        echo "</select></td>";
-
-        echo "<td><button class='doneButton' id='btnDone$foodID' >Done</button></td></tr>";
-
     }
     echo "</tbody></table><br />";
 }
@@ -177,31 +149,6 @@ printTable("Pantry");
         name.innerHTML = "<input type='text' id='inputName" + id + "' value='" + nameData + "'>";
         type.innerHTML = "<input type='text' id='inputType" + id + "' value='" + typeData + "'>";
         spoilDays.innerHTML = "<input type='text' id='inputSpoilDays" + id + "' value='" + spoilDaysData + "'>";
-
-
-
-
-
-
-
-
-
-        //old script
-        /*
-        //hide everything in this's row
-        var row = context.parentNode.parentNode;
-        row.style.display = 'none';
-
-        //get the foodID
-        var foodID = row.id;
-
-        //get the hidden form that corresponds to that foodID
-        var editRow = document.getElementById('edit' + foodID);
-
-        //make it visible
-        editRow.style.display = 'inherit';
-
-        */
     };
     
     var saveItem = function (id) {
@@ -254,12 +201,7 @@ printTable("Pantry");
             }
         };
         ajax.send();
-
-
-        //if row needs to be moved, move it
-
-        //otherwise, update data
-    }
+    };
 
     var deleteItem = function (id) {
         var name = document.getElementById("name" + id).innerHTML;
@@ -270,7 +212,8 @@ printTable("Pantry");
                 if (ajax.readyState === 4) {
                     if (ajax.responseText === "deleted") {
                         //remove the original row
-                        document.removeChild(document.getElementById(id));
+                        var row = document.getElementById(id);
+                        row.parentNode.removeChild(row);
                     }
                     else {
                         alert(ajax.responseText);
@@ -281,137 +224,6 @@ printTable("Pantry");
         }
 
     }
-</script>
-<script type="text/javascript">
-    var addDoneButtonClickedFunction = function (node) {
-        node.addEventListener("click", doneButtonClicked(node))
-    };
-
-    var doneButtonClicked = function (passedNode) {
-        return function () {
-            var row = passedNode.parentNode.parentNode;
-            var table = row.parentNode.parentNode;
-            var id = row.id.substr(4);
-            var name = document.getElementById("editname" + id).value;
-            var type = document.getElementById("edittype" + id).value;
-            var spoilDays = document.getElementById("editspoilDate" + id).value;
-            var locationSelect = document.getElementById("locationSelect" + id);
-            var location = locationSelect.options[locationSelect.selectedIndex].value;
-
-            //form validation
-            if (name === "" || type === "" || isNaN(parseInt(spoilDays))) {
-                alert("You must include a name, type, and number of days till spoiled");
-            }
-            else {
-                //submit query
-                var ajax = new XMLHttpRequest();
-                ajax.open("GET", "ModifyItem.php?id=" + id + "&name=" + name + "&type=" + type + "&spoilDays=" + spoilDays + "&location=" + location);
-                ajax.onreadystatechange = function (passedEditRow) {
-                    return function () {
-                        var foodID = passedEditRow.id.substr(4);
-                        if (ajax.readyState === 4) {
-                            if (ajax.responseText === "true") {
-                                //change the original values, except location
-                                var displayRow = document.getElementById(foodID);
-                                var displayRowChildren = displayRow.childNodes;
-                                for (var m = 0; m < displayRowChildren.length; m++) {
-                                    switch (displayRowChildren[m].className) {
-                                        case "name":
-                                            displayRowChildren[m].innerHTML = name;
-                                            break;
-                                        case "type":
-                                            displayRowChildren[m].innerHTML = type;
-                                            break;
-                                        case "spoilDate":
-                                            displayRowChildren[m].innerHTML = spoilDays;
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-
-                                //if location changed, move the row and its edit row
-                                var originalLocation = displayRow.parentNode.parentNode.id;
-                                if (originalLocation !== location) {
-                                    var editRow = passedEditRow.cloneNode(true);
-                                    var newDisplayRow = displayRow.cloneNode(true);
-
-                                    //add to new table
-                                    document.getElementById("tbody_" + location).appendChild(newDisplayRow);
-                                    document.getElementById("tbody_" + location).appendChild(editRow);
-
-                                    //switch visibility
-                                    editRow.style.display = "none";
-                                    newDisplayRow.style.display = "inherit";
-
-                                    //remove from old table
-                                    passedEditRow.parentNode.removeChild(passedEditRow);
-                                    displayRow.parentNode.removeChild(displayRow);
-
-                                    //attach new event listeners to buttons
-                                    var doneButton = document.getElementById("btnDone" + foodID);
-                                    var deleteButton = document.getElementById("btnDelete" + foodID);
-                                    addDoneButtonClickedFunction(doneButton);
-                                    deleteButton.addEventListener("click", deleteButtonClicked);
-                                }
-                                else {
-                                    //switch visibility
-                                    displayRow.style.display = "inherit";
-                                    passedEditRow.style.display = "none";
-                                }
-                            }
-                            else {
-                                alert(ajax.responseText);
-                            }
-                        }
-                    }(row);
-                };
-                ajax.send();
-            }
-        }
-    };
-
-    var deleteButtonClicked = function () {
-        var row = this.parentNode.parentNode;
-        var deleteItemName = row.getElementsByClassName("name")[0].innerHTML;
-        if (confirm("Are you sure that you want to remove " + deleteItemName + " from your inventory?")) {
-            var id = row.id;
-            var ajax = new XMLHttpRequest();
-            ajax.open("GET", "DeleteItem.php?id=" + id);
-            ajax.onreadystatechange = function () {
-                if (ajax.readyState === 4) {
-                    if (ajax.responseText === "deleted") {
-                        //remove the original row
-                        var table = row.parentNode;
-                        table.removeChild(row);
-                    }
-                    else {
-                        alert(ajax.responseText);
-                    }
-                }
-            };
-            ajax.send();
-        }
-    };
-
-    var ajaxOnLoad = function () {
-        //attach event listeners to all Delete buttons and bind them to ajax calls
-        var deleteButtons = document.getElementsByClassName("deleteButton");
-        for (var i = 0; i < deleteButtons.length; i++) {
-            deleteButtons[i].addEventListener("click", deleteButtonClicked);
-        }
-
-        var doneButtons = document.getElementsByClassName('doneButton');
-        for (i = 0; i < doneButtons.length; i++) {
-            doneButtons[i].addEventListener("click", doneButtonClicked);
-        }
-    };
-
-//    var hiddenRows = document.getElementsByClassName("editRow");
-//    for (var l = 0; l < hiddenRows; l++){
-//        hiddenRows[l].style.display = "none";
-//    }
-    window.onload = ajaxOnLoad;
 </script>
 <script type="text/javascript">
     //attach sort method to columns
