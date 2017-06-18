@@ -11,6 +11,9 @@ if (!isset($_SESSION['username'])){
 <html>
 <head>
     <title>Add Items</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Add Item</h1>

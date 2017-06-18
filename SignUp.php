@@ -11,12 +11,9 @@ if (isset($_SESSION['username'])){
 <html>
 <head>
     <title>Sign Up</title>
-    <style>
-        .warning{
-            display: none;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Sign Up</h1>

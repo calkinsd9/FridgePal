@@ -40,7 +40,7 @@ function printTable($location){
     $location_lowercase = strtolower($location);
     echo <<<html
     <h2>$location</h2>
-    <table id="$location_lowercase">
+    <table id="$location_lowercase" class="inventoryTable">
         <thead>
             <tr>
                 <th>Include in<br>search</th>
@@ -94,11 +94,13 @@ html;
     <title>Your Inventory</title>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-    <link rel="stylesheet" href="testpage.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="main-content">
 <h1>Current Inventory</h1>
+<div id="floatboxRight" onclick="recipeSearch()">Search<br><img id="allRecipesLogo" src="allrecipes-logo.png"><br>using selected ingredients</div>
+<div id="floatboxLeft" onclick="location.href = 'AddItems.php';">Add<br>more<br>items</div>
 <br/>
 
 <?php
@@ -107,7 +109,6 @@ printTable("Freezer");
 printTable("Pantry");
 ?>
 
-<button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
 <script type="text/javascript">
     var recipeSearch = function() {
         var checkboxes = document.getElementsByClassName("checkboxes");
@@ -122,8 +123,9 @@ printTable("Pantry");
 </script>
 <script type="text/javascript">
     var editItem = function(id) {
-        //hide the edit button
+        //hide the edit and delete button
         document.getElementById("btnEdit" + id).style.display = "none";
+        document.getElementById("btnDelete" + id).style.display = "none";
 
         //reveal the save button
         document.getElementById("btnSave" + id).style.display = "inline";
@@ -193,8 +195,9 @@ printTable("Pantry");
                     //hide the save button
                     document.getElementById("btnSave" + id).style.display = "none";
 
-                    //reveal the edit button
+                    //reveal the edit and delete buttons
                     document.getElementById("btnEdit" + id).style.display = "inline";
+                    document.getElementById("btnDelete" + id).style.display = "inline";
 
                     //if location changed, move the row to new table
                     var originalLocation = name.parentNode.parentNode.parentNode.id;

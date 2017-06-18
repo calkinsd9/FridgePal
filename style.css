@@ -2,7 +2,7 @@ title, h1, h2, body{
     font-family: Michroma, Helvetica, Arial, sans-serif;
     text-align: center;
 }
-table{
+table.inventoryTable{
     font-family: Raleway, Helvetica, Arial, sans-serif;
     margin: auto;
     width: 700px;
@@ -21,7 +21,7 @@ th{
     border-collapse: collapse;
 }
 html {
-    background: url('fruit.jpg') no-repeat center center fixed;
+    background: url('fruit2.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -32,4 +32,63 @@ div#main-content{
     display: inline-block;
     padding: 20px;
     border-radius: 20px
+}
+#floatboxRight{
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    width: 200px;
+    background-color: rgba(181, 224, 238, 0.75);
+    z-index: 10;
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    height: auto;
+    cursor: pointer;
+}
+#allRecipesLogo{
+    width: 150px;
+    height: auto;
+    border: 5px rgba(181, 224, 238, 0.75);
+}
+#floatboxLeft{
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    width: 100px;
+    background-color: rgba(181, 224, 238, 0.75);
+    z-index: 10;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    height: auto;
+    cursor: pointer;
+}
+.edit, .save, .delete{
+    border-radius: 5px;
+    background-color: rgba(62, 82, 224, 0.51);
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 70px;
+}
+button{
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    border-radius: 5px;
+    background-color: rgba(61, 130, 180, 0.75);
+    margin-left: 25px;
+    margin-right: 25px;
+    font-size: 20px;
+}
+.featureIcon{
+    width: 120px;
+    height: auto;
+}
+table#iconTable{
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    width: 700px;
+    padding: 10px;
+    margin: auto;
+}
+table#iconTable td{
+    width: 700px;
+    padding: 20px;
+}
+.warning{
+    display: none;
 }

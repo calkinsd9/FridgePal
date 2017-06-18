@@ -28,6 +28,9 @@ if (isset($_SESSION['username'])){
 <html>
 <head>
     <title>Log In</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Log In</h1>

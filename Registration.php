@@ -31,6 +31,9 @@ function initializePDO() {
 <html>
 <head>
     <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Michroma" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php
