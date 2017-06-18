@@ -113,6 +113,18 @@ printTable("Pantry");
 
 <button id="btnRecipeSearch" onclick="recipeSearch()">Search AllRecipes</button>
 <script type="text/javascript">
+    var recipeSearch = function() {
+        var checkboxes = document.getElementsByClassName("checkboxes");
+        var queryString = "?ingIncl=";
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked === true) {
+                queryString += checkboxes[i].value + ",";
+            }
+        }
+        location.href = "http://allrecipes.com/search/results/" + queryString;
+    };
+</script>
+<script type="text/javascript">
     var editItem = function(id) {
         //hide the edit button
         document.getElementById("btnEdit" + id).style.display = "none";
