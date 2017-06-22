@@ -282,7 +282,6 @@ printTable("Pantry");
 <br />
 <br />
 <p>You are currently logged in as <?php echo $_SESSION['username']?>.</p>
-<a href="./AddItems.php" >Add Items</a>
 <a href="Logout.php" >Click here to log out</a>
 </div>
 </body>
